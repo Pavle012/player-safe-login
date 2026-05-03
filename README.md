@@ -1,20 +1,10 @@
+> [!NOTE]
+> **This is a fork of the original mod**
 # 🛡️ Player Safe Login
 
-![Mod version](https://img.shields.io/badge/version-1.0.0-blue)
-![Minecraft](https://img.shields.io/badge/minecraft-1.21.1-green)
-![NeoForge](https://img.shields.io/badge/neoforge-supported-brightgreen)
-![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
 **Player Safe Login** is a Minecraft mod designed to enhance security for **offline mode servers** by adding a client-server password authentication system.
 
----
-
-## 📸 Screenshot (comming soon)
-
-> ![screenshot](https://yourdomain.com/screenshot.png)  
-> *Example of password entry screen*
-
----
 
 ## ✨ Features
 
