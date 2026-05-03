@@ -25,3 +25,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
         with:
           arguments: build --build-cache
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: build/libs/
+          retention-days: 7
