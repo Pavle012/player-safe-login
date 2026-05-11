@@ -1,38 +1,28 @@
 package io.SousaLJ.playersafelogin.network.payloads;
 
-import io.SousaLJ.playersafelogin.PlayerSafeLogin;
 import io.SousaLJ.playersafelogin.client.ClientPasswordManager;
 import io.SousaLJ.playersafelogin.network.IPlayerSafeLoginPacket;
 import io.SousaLJ.playersafelogin.network.PlayerSafeLoginPacketHandler;
-import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import org.jetbrains.annotations.NotNull;
+import net.minecraftforge.network.NetworkEvent;
+
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public record ResetPasswordPayload(UUID playerId, String newPassword) implements IPlayerSafeLoginPacket {
-    public static final CustomPacketPayload.Type<ResetPasswordPayload> TYPE = new CustomPacketPayload.Type<>(
-            PlayerSafeLogin.rl( "reset_password")
-    );
 
-    public static final StreamCodec<FriendlyByteBuf, ResetPasswordPayload> STREAM_CODEC = StreamCodec.composite(
-            UUIDUtil.STREAM_CODEC,
-            ResetPasswordPayload::playerId,
-            ByteBufCodecs.STRING_UTF8,
-            ResetPasswordPayload::newPassword,
-            ResetPasswordPayload::new
-    );
+    public ResetPasswordPayload(FriendlyByteBuf buf) {
+        this(buf.readUUID(), buf.readUtf());
+    }
 
-    @Override
-    public @NotNull Type<ResetPasswordPayload> type() {
-        return TYPE;
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeUUID(playerId);
+        buf.writeUtf(newPassword);
     }
 
     @Override
-    public void handle(IPayloadContext context) {
+    public void handle(Supplier<NetworkEvent.Context> contextSupplier) {
+        NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> {
             ClientPasswordManager.deleteSavedPassword();
             String hashedPassword = ClientPasswordManager.hashPassword(newPassword);
@@ -40,5 +30,6 @@ public record ResetPasswordPayload(UUID playerId, String newPassword) implements
             PasswordAutenticationPayload payload = new PasswordAutenticationPayload(playerId, hashedPassword);
             PlayerSafeLoginPacketHandler.sendToServer(payload);
         });
+        context.setPacketHandled(true);
     }
 }

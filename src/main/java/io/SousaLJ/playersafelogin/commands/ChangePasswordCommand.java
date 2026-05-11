@@ -43,3 +43,4 @@ public class ChangePasswordCommand implements Command<CommandSourceStack> {
         return 1;
     }
 }
+

@@ -2,7 +2,7 @@ package io.SousaLJ.playersafelogin.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import net.minecraft.commands.CommandSourceStack;
-import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 
 
 public class PlayerSafeLoginCommands {
@@ -13,3 +13,4 @@ public class PlayerSafeLoginCommands {
         ChangePasswordCommand.register(dispatcher);
     }
 }
+

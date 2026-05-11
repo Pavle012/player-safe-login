@@ -10,3 +10,4 @@ public class CachedUser {
     public String getUuid() { return uuid; }
     public String getExpiresOn() { return expiresOn; }
 }
+

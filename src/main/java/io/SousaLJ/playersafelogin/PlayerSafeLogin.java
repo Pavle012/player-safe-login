@@ -9,17 +9,14 @@ import io.SousaLJ.playersafelogin.storage.MySQLStorage;
 import io.SousaLJ.playersafelogin.storage.SQLiteStorage;
 import io.SousaLJ.playersafelogin.storage.StorageProvider;
 import net.minecraft.resources.ResourceLocation;
-
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import org.slf4j.Logger;
-
-import java.io.IOException;
 
 @Mod(PlayerSafeLogin.MODID)
 public class PlayerSafeLogin
@@ -28,19 +25,17 @@ public class PlayerSafeLogin
 
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    private final PlayerSafeLoginPacketHandler packetHandler;
-
     private static StorageProvider storage;
 
-    public PlayerSafeLogin(IEventBus modEventBus, ModContainer modContainer) {
+    public PlayerSafeLogin() {
 
-        NeoForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(this);
 
-        NeoForge.EVENT_BUS.addListener(PlayerSafeLoginCommands::registerCommands);
+        MinecraftForge.EVENT_BUS.addListener(PlayerSafeLoginCommands::registerCommands);
 
-        packetHandler = new PlayerSafeLoginPacketHandler(modEventBus);
+        PlayerSafeLoginPacketHandler.register();
 
-        modContainer.registerConfig(ModConfig.Type.SERVER, PlayerSafeLoginConfig.SERVER_SPEC);
+        net.minecraftforge.fml.ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, PlayerSafeLoginConfig.SERVER_SPEC);
     }
 
 
@@ -53,7 +48,7 @@ public class PlayerSafeLogin
         }
     }
     public static ResourceLocation rl(String path) {
-        return ResourceLocation.fromNamespaceAndPath(PlayerSafeLogin.MODID, path);
+        return new ResourceLocation(PlayerSafeLogin.MODID, path);
     }
 
     private StorageProvider createMySQLStorage() {

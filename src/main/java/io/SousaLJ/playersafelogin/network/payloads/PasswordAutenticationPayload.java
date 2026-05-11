@@ -3,50 +3,30 @@ package io.SousaLJ.playersafelogin.network.payloads;
 import io.SousaLJ.playersafelogin.PlayerSafeLogin;
 import io.SousaLJ.playersafelogin.network.IPlayerSafeLoginPacket;
 import io.SousaLJ.playersafelogin.util.AuthLog;
-import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import org.jetbrains.annotations.NotNull;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 public record PasswordAutenticationPayload(UUID playerId, String hashedPassword) implements IPlayerSafeLoginPacket {
-    /**
-     * The type of the packet.
-     */
 
-    private static final Map<UUID, Long> recentFailedAttempts = new HashMap<>();
-    private static final long COOLDOWN_MILLIS = 10_000; // 10 segundos
+    public PasswordAutenticationPayload(FriendlyByteBuf buf) {
+        this(buf.readUUID(), buf.readUtf());
+    }
 
-    public static final CustomPacketPayload.Type<PasswordAutenticationPayload> TYPE = new Type<>(
-            PlayerSafeLogin.rl("login_password_register")
-    );
-
-
-    public static final StreamCodec<FriendlyByteBuf, PasswordAutenticationPayload> STREAM_CODEC = StreamCodec.composite(
-            UUIDUtil.STREAM_CODEC,
-            PasswordAutenticationPayload::playerId,
-            ByteBufCodecs.STRING_UTF8,
-            PasswordAutenticationPayload::hashedPassword,
-            PasswordAutenticationPayload::new
-    );
-
-    @NotNull
-    @Override
-    public CustomPacketPayload.Type<PasswordAutenticationPayload> type() {
-        return TYPE;
+    public void encode(FriendlyByteBuf buf) {
+        buf.writeUUID(playerId);
+        buf.writeUtf(hashedPassword);
     }
 
     @Override
-    public void handle(IPayloadContext context) {
+    public void handle(Supplier<NetworkEvent.Context> contextSupplier) {
+        NetworkEvent.Context context = contextSupplier.get();
         context.enqueueWork(() -> {
             if (PlayerSafeLogin.getStorage().requiresInitialSetup(playerId)) {
                 PlayerSafeLogin.getStorage().setupPassword(playerId, hashedPassword);
@@ -54,7 +34,7 @@ public record PasswordAutenticationPayload(UUID playerId, String hashedPassword)
             } else {
                 boolean isValid = PlayerSafeLogin.getStorage().validatePassword(playerId, hashedPassword);
                 if (!isValid) {
-                    ServerPlayer serverPlayer = (ServerPlayer) context.player();
+                    ServerPlayer serverPlayer = context.getSender();
 
                     if (serverPlayer != null) {
                         /*
@@ -62,7 +42,7 @@ public record PasswordAutenticationPayload(UUID playerId, String hashedPassword)
                         * */
                         String playerName = serverPlayer.getGameProfile().getName();
                         String uuid = serverPlayer.getUUID().toString();
-                        String ip = context.connection().getRemoteAddress().toString();
+                        String ip = serverPlayer.connection.connection.getRemoteAddress().toString();
                         AuthLog.logFailedAttempt(playerName, uuid, ip);
                         /*
                         * Fim do registro do log de tentativas de login
@@ -77,5 +57,6 @@ public record PasswordAutenticationPayload(UUID playerId, String hashedPassword)
                 }
             }
         });
+        context.setPacketHandled(true);
     }
 }

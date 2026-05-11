@@ -1,8 +1,8 @@
 package io.SousaLJ.playersafelogin.network;
 
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.minecraftforge.network.NetworkEvent;
+import java.util.function.Supplier;
 
-public interface IPlayerSafeLoginPacket extends CustomPacketPayload {
-    void handle(IPayloadContext context);
+public interface IPlayerSafeLoginPacket {
+    void handle(Supplier<NetworkEvent.Context> context);
 }

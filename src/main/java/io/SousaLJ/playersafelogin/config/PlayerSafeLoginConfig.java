@@ -1,27 +1,27 @@
 package io.SousaLJ.playersafelogin.config;
 
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
 
 public class PlayerSafeLoginConfig {
-    public static final ModConfigSpec SERVER_SPEC;
+    public static final ForgeConfigSpec SERVER_SPEC;
     public static final ServerConfig SERVER;
 
     static {
-        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
+        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
         SERVER = new ServerConfig(builder);
         SERVER_SPEC = builder.build();
     }
 
     public static class ServerConfig {
-        public final ModConfigSpec.EnumValue<StorageType> storageType;
-        public final ModConfigSpec.ConfigValue<String> mysqlHost;
-        public final ModConfigSpec.IntValue mysqlPort;
-        public final ModConfigSpec.ConfigValue<String> mysqlUser;
-        public final ModConfigSpec.ConfigValue<String> mysqlPassword;
-        public final ModConfigSpec.ConfigValue<String> mysqlDbName;
-        public final ModConfigSpec.ConfigValue<String> sqlitePath;
+        public final ForgeConfigSpec.EnumValue<StorageType> storageType;
+        public final ForgeConfigSpec.ConfigValue<String> mysqlHost;
+        public final ForgeConfigSpec.IntValue mysqlPort;
+        public final ForgeConfigSpec.ConfigValue<String> mysqlUser;
+        public final ForgeConfigSpec.ConfigValue<String> mysqlPassword;
+        public final ForgeConfigSpec.ConfigValue<String> mysqlDbName;
+        public final ForgeConfigSpec.ConfigValue<String> sqlitePath;
 
-        public ServerConfig(ModConfigSpec.Builder builder) {
+        public ServerConfig(ForgeConfigSpec.Builder builder) {
             builder.comment("Configurações do servidor").push("server");
 
             storageType = builder

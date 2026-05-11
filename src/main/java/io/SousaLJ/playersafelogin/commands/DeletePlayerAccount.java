@@ -59,3 +59,4 @@ public class DeletePlayerAccount implements Command<CommandSourceStack> {
         }
     }
 }
+

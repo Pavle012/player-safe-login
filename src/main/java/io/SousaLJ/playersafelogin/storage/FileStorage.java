@@ -59,3 +59,4 @@ public class FileStorage implements StorageProvider {
         return !Files.exists(getPlayerFile(playerId));
     }
 }
+

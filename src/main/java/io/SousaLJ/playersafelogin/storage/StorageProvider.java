@@ -8,3 +8,4 @@ public interface StorageProvider {
     boolean resetPassword(UUID playerId);
     boolean requiresInitialSetup(UUID playerId);
 }
+

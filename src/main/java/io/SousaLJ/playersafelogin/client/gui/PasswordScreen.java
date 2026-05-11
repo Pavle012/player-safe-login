@@ -25,7 +25,7 @@ public class PasswordScreen extends Screen {
     private Button randomPasswordButton;
 
     private Component subtitle = Component.translatable("playersafelogin.gui.login_subtitle");
-    private static final ResourceLocation LOGO_TEXTURE = ResourceLocation.fromNamespaceAndPath(
+    private static final ResourceLocation LOGO_TEXTURE = new ResourceLocation(
             PlayerSafeLogin.MODID, "textures/gui/logo_player_safe_login.png"
     );
 
@@ -81,7 +81,7 @@ public class PasswordScreen extends Screen {
 
     @Override
     public void render(GuiGraphics gui, int mouseX, int mouseY, float partialTicks) {
-        renderBackground(gui, mouseX, mouseY, partialTicks);
+        renderBackground(gui);
 
         super.render(gui, mouseX, mouseY, partialTicks);
 

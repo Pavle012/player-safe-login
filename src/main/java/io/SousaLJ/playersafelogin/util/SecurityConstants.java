@@ -6,3 +6,4 @@ public class SecurityConstants {
 
     public static final String ALLOWED_CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_+=<>?"; // Unicode range
 }
+
