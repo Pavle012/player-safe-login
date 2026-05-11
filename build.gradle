@@ -90,9 +90,9 @@ configurations {
 }
 
 dependencies {
-    implementation "net.neoforged:neoforge:${neo_version}"
-    implementation 'mysql:mysql-connector-java:8.0.33'
-    implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
+    implementation libs.neoforge
+    implementation libs.mysql.connector
+    implementation libs.sqlite.jdbc
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

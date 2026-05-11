@@ -1,0 +1,9 @@
+[versions]
+neoforge = "21.1.214"
+mysql-connector = "8.0.33"
+sqlite-jdbc = "3.42.0.0"
+
+[libraries]
+neoforge = { group = "net.neoforged", name = "neoforge", version.ref = "neoforge" }
+mysql-connector = { group = "mysql", name = "mysql-connector-java", version.ref = "mysql-connector" }
+sqlite-jdbc = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite-jdbc" }
